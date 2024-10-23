@@ -7,4 +7,3 @@ downs = lines.count(")")
 
 final_number = starting_number + ups - downs
 puts final_number
-
