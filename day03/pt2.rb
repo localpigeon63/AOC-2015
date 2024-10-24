@@ -14,9 +14,9 @@ santa_stops.map do |direction|
     elsif direction == "v"
         new_position = santa_position[0], (santa_position[1] += 1)
     elsif direction == ">"
-        new_position = (santa_position[0] -= 1), santa_position[1]
-    else 
         new_position = (santa_position[0] += 1), santa_position[1]
+    else 
+        new_position = (santa_position[0] -= 1), santa_position[1]
     end
     santa_visits << new_position 
 end
@@ -27,9 +27,9 @@ robo_stops.map do |direction|
     elsif direction == "v"
         new_position = robo_position[0], (robo_position[1] += 1)
     elsif direction == ">"
-        new_position = (robo_position[0] -= 1), robo_position[1]
-    else 
         new_position = (robo_position[0] += 1), robo_position[1]
+    else 
+        new_position = (robo_position[0] -= 1), robo_position[1]
     end
     robo_visits << new_position 
 end
