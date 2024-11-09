@@ -1,4 +1,7 @@
-# none of the 
+# scrappy notes. Do not take seriously.
+# split the input lines into three: instruction, start point, end point
+# define how the instructions are executed
+# figure out how to apply them to a square for which you have two coordinates and need to extrapolate the other two
 
 string.split
 instructions, points = line.split("") #difficulty here is what to split on. Unresolved!
