@@ -10,7 +10,10 @@ input.each do |line|
     evaluated_counts << evaluated_count
 end
 
+def hello
+    puts "hi"
+end
+
 result = full_counts.sum - evaluated_counts.sum
 
 puts result
-

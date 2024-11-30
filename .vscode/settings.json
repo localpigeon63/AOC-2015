@@ -1,3 +1,4 @@
 {
-    "editor.inlineSuggest.syntaxHighlightingEnabled": true
+    "editor.inlineSuggest.syntaxHighlightingEnabled": true,
+    "terminal.integrated.defaultLocation":"editor"
 }
