@@ -1,19 +1,45 @@
-input = File.read("./day12/input.txt")
+input = File.read("./day12/input.txt").slice(1..-2)
 
-def remove_red(input)
-    input.gsub(/\{.[^\{]*red.[^\}]*\}/, '')
+totals = []
+
+def extract_numbers(x)
+    numbers = x.scan(/-?\d+/).map do |number|
+        number.to_i
+    end
+    return numbers
 end
 
-numbers_without_red = remove_red(input)
+open_parentheses = 0
+close_parentheses = 0
+string = ''
+strings = []
 
-numbers = numbers_without_red.scan(/-?\d+/)
-
-integers = numbers.map do |number|
-    number.to_i
+input.each_char do |c|
+    if c.match('{')
+        open_parentheses = open_parentheses + 1
+    elsif c.match('}')
+        close_parentheses = close_parentheses + 1
+    end
+    if open_parentheses == close_parentheses && open_parentheses > 0
+        string << c
+        strings << string
+        string = ''
+        open_parentheses = 0
+        close_parentheses = 0
+    else
+        string << c
+    end
 end
 
-answer = integers.sum
+pp strings.count
 
-puts answer
+strings.each do |line|
+    if 
+        !line.include?('red') ||
+        line.count('red') == line.scan(/\[[^\]]*\bred\b[^\]]*\]/).length
+        totals << extract_numbers(line).sum
+    end
+end
 
-# does not work - conclusion: bin it and start again for part 2 using JSON format, key-value pairs, and witchcraft.
+pp totals.sum
+
