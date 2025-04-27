@@ -1,12 +1,26 @@
 require './day12/pt2'
 
+
+
 RSpec.describe 'pt2' do
-    describe 'remove_red', :aggregate_failures do
-      it 'returns the string without red values' do
-        expect(remove_red('[1,{"c":"red","b":2},3]')).to eq('[1,,3]')
-        expect(remove_red('{"d":"red","e":[1,2,3,4],"f":5}')).to eq('')
-        expect(remove_red('[1,"red",5]')).to eq('[1,"red",5]')
-        expect(remove_red('[1,2,3]')).to eq('[1,2,3]')
+    describe 'find_open', :aggregate_failures do
+      subject(:result) { find_open(7, haystack) }
+
+      context 'when haystack only has one pair of {}' do
+        let(:haystack) { '{: 3, 4, :"red"}' }
+
+        it 'finds the opening parenthesis' do
+          expect(result).to eq(0)
+        end
+      end
+
+      context 'when haystack multiple pair of {}' do
+        let(:haystack) { '{: {}, X, 4, :"red"}' }
+
+        it 'returns the string without red values' do
+          expect(result).to eq(0)
+        end
       end
     end
   end
+
