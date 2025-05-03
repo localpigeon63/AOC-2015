@@ -24,3 +24,5 @@ input.each do |ingredient|
     calories = numbers[4].to_i
     ingredients << Ingredient.new(name, capacity, durability, flavor, texture, calories)
 end
+
+pp ingredients

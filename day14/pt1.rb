@@ -16,9 +16,9 @@ input.each do |reindeer|
         elsif second_counter == flytime + resttime
             second_counter = 0
         end
-    second_counter = second_counter + 1
+        second_counter = second_counter + 1
     end
-distances << total_distance
+    distances << total_distance
 end
 
 puts distances.sort[-1]

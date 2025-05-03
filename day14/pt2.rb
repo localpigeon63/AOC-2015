@@ -17,8 +17,8 @@ input.each do |reindeer|
         elsif second_counter == flytime + resttime
             second_counter = 0
         end
-    second_counter = second_counter + 1
-    distance_tracker << total_distance
+        second_counter = second_counter + 1
+        distance_tracker << total_distance
     end
     distances << distance_tracker
 end
@@ -32,8 +32,8 @@ distances.each do |distance_tracker|
         if distance == all_distances.max
             points = points + 1
         end
-    leaderboard << points
     end
+    leaderboard << points
 end
 
 puts leaderboard.max

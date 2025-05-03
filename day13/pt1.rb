@@ -26,10 +26,10 @@ happiness_data.each do |key, value|
   happiness_index[guest_pair] += value
 end
 
-options = guests.permutation.to_a
+seating_plans = guests.permutation.to_a
 happiness_degrees = []
 
-options.each do |seating_plan|
+seating_plans.each do |seating_plan|
     happiness_per_plan = []
     seating_plan.each_cons(2) do |person1, person2|
         tuple = [person1, person2].sort
