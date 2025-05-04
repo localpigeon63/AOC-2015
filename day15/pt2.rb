@@ -45,13 +45,17 @@ recipe_book.each do |combination|
     durability = 0
     flavor = 0
     texture = 0
+    calories = 0
     combination.each do |ingredient, amount|
         capacity += ingredient.capacity * amount
         durability += ingredient.durability * amount
         flavor += ingredient.flavor * amount
         texture += ingredient.texture * amount
+        calories += ingredient.calories * amount
     end
-    if capacity < 0 || durability < 0 || flavor < 0 || texture < 0
+    if calories != 500
+        total_score = 0
+    elsif capacity < 0 || durability < 0 || flavor < 0 || texture < 0
         total_score = 0
     else
         total_score = capacity * durability * flavor * texture
