@@ -10,6 +10,18 @@ machine_list_input.each do |item|
     machine_list[item_name] = item_number
 end
 
+greater_than = machine_list.select{ |key, value| key == "cats" || key == "trees" }
+less_than = machine_list.select{ |key, value| key == "pomeranians" || key == "goldfish" }
+
+machine_list.delete_if do |key, value|
+    greater_than.key?(key) ||
+    less_than.key?(key)
+end
+
+pp machine_list
+pp greater_than
+pp less_than
+
 sue_list = File.readlines("./day16/sue_list.txt").each do |line|
     line.chomp!
 end
@@ -32,7 +44,13 @@ sue_matrix.reject! do |sue_line|
     sue_items = sue_line[1]
     machine_list.any? do |key, value|
         sue_items.key?(key) && sue_items[key] != value
+    end ||
+    greater_than.any? do |key, value|
+        sue_items.key?(key) && !(sue_items[key] > value)
+    end ||
+    less_than.any? do |key, value|
+        sue_items.key?(key) && !(sue_items[key] < value)
     end
 end
 
-puts sue_matrix
+pp sue_matrix
