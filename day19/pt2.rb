@@ -1,14 +1,16 @@
+require 'benchmark'
+
 input = File.readlines("./day19/input.txt")
 
-medicine = input.last
+starting_molecule = input.last
 
-starting_molecule = "e"
+end_point = "e"
 
 substitutions_list = input[0..-3].map {|item| item.chomp}
 
 SUBSTITUTIONS = {}
 substitutions_list.each do |molecule|
-    key, value = molecule.split(" => ")
+    value, key = molecule.split(" => ")
     if SUBSTITUTIONS.key?(key)
         SUBSTITUTIONS[key].append(value)
     else
@@ -16,16 +18,16 @@ substitutions_list.each do |molecule|
     end
 end
 
-def substitute(medicine)
+def substitute(end_point)
     results = []
     SUBSTITUTIONS.each do |key, values|
         starting_position = 0
-        while match = medicine.index(key, starting_position) do
+        while match = end_point.index(key, starting_position) do
             match_length = key.length
             values.each do |value|
-                medicine_copy = medicine.dup
-                medicine_copy[match..(match_length + match - 1)] = value
-                results << medicine_copy
+                end_point_copy = end_point.dup
+                end_point_copy[match..(match_length + match - 1)] = value
+                results << end_point_copy
             end
             starting_position = match + 1
         end
@@ -33,25 +35,39 @@ def substitute(medicine)
     results
 end
 
-def fabricate(molecule, medicine, counter)
-    puts "counter: #{counter} molecule.len: #{molecule.length}"
-    sub_results = substitute(molecule)
+def fabricate(molecule, end_point, counter)
+    # puts "counter: #{counter} molecule.len: #{molecule.length}"
+    sub_results = substitute(molecule).sort_by do |element|
+        element.length
+    end
+    if sub_results.empty?
+        #puts "No subs left"
+        return nil
+    end
+    puts "Checking #{sub_results.length}"
+
     sub_results.each do |current|
-        if current == medicine
-            puts "found medicine at " + counter.to_s
+        puts "counter: #{counter}"
+        #puts "Checks: #{$checks}" if $checks % 100000 == 0
+        #raise "Not shrinking! #{molecule} -> #{current}" if current.length > molecule.length
+        
+        if current == end_point
+            puts "found end_point at " + counter.to_s
             return counter
-        elsif molecule.length > medicine.length
-            puts "s"
-            next
         else
-            result = fabricate(current, medicine, counter + 1)
-            if result
-                return result
-            end
+            result = fabricate(current, end_point, counter + 1)
+            return result if result
         end
     end
+    #puts "Bailing after #{counter} steps"
     return nil
 end
 
-result = fabricate(starting_molecule, medicine, 1)
+result = nil
+
+#time = Benchmark.measure do
+#  result = fabricate(starting_molecule, end_point, 1)
+#end
+
 puts result
+puts time
