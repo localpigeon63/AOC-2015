@@ -149,5 +149,8 @@ while stack.any? do
     end
 end
 
-pp won_games.min
-pp losing_games.count
+total_winning_games = won_games.count
+total_losing_games = losing_games.count
+
+puts "winning_games = #{total_winning_games}"
+puts "losing_games = #{total_losing_games}"
