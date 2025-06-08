@@ -1,5 +1,4 @@
-initial_state = {:player_turn => true, 
-                :mana_spent => 0, 
+initial_state = {:mana_spent => 0, 
                 :mana_remaining => 500, 
                 :player_hp => 50, 
                 :player_armour => 0,
@@ -23,18 +22,15 @@ def cast(state)
     elsif state[:next_spell] == "shield"
         state[:mana_spent] += 113
         state[:mana_remaining] -= 113
-        state[:player_armour] = 7
         state[:le_shield] = 6
     elsif state[:next_spell] == "poison"
         state[:mana_spent] += 173
         state[:mana_remaining] -= 173
-        state[:boss_hp] -= 3
         state[:le_poison] = 6
     elsif state[:next_spell] == "recharge"
         state[:mana_spent] += 229
         state[:mana_remaining] -= 229
         state[:le_recharge] = 5
-        state[:mana_remaining] += 101
     end
 end
 
@@ -63,46 +59,95 @@ def evaluate(state)
     end
 end
 
-def generate_moves (state, stack)
+losing_games = []
+
+def generate_moves (state)
+    new_states = []
     if state[:mana_remaining] >= 53
-        state[:next_spell] = "magic_missile"
-        stack << state.clone
-    elsif state[:mana_remaining] >= 73
-        state[:next_spell] = "drain"
-        stack << state.clone
-    elsif state[:mana_remaining] >=113 &&
-        state[:le_shield] == 0
-        state[:next_spell] = "shield"
-        stack << state.clone
-    elsif state[:mana_remaining] >= 173 &&
-        state[:le_poison] == 0
-        state[:next_spell] = "poison"
-        stack << state.clone
-    elsif state[:mana_remaining] >= 229 &&
-        state[:le_recharge] == 0
-        state[:next_spell] = "recharge"
-        stack << state.clone
+        new_state = state.dup
+        new_state[:next_spell] = "magic_missile"
+        new_states << new_state
     end
+    if state[:mana_remaining] >= 73
+        new_state = state.dup
+        new_state[:next_spell] = "drain"
+        new_states << new_state
+    end
+    if state[:mana_remaining] >=113 &&
+        state[:le_shield] == 0
+        new_state = state.dup
+        new_state[:next_spell] = "shield"
+        new_states << new_state
+    end
+    if state[:mana_remaining] >= 173 &&
+        state[:le_poison] == 0
+        new_state = state.dup
+        new_state[:next_spell] = "poison"
+        new_states << new_state
+    end
+    if state[:mana_remaining] >= 229 &&
+        state[:le_recharge] == 0
+        new_state = state.dup
+        new_state[:next_spell] = "recharge"
+        new_states << new_state
+    end
+    new_states
 end
 
 won_games = []
-stack = [initial_state]
 
-while stack.length > 0 do
+stack = generate_moves(initial_state)
+
+while stack.any? do
     state = stack.pop
+
+    # player turn
     apply_le(state)
     evaluate(state)
         if state[:outcome] == "win"
             won_games << state[:mana_spent]
+            next
         elsif state[:outcome] == "lose"
+            losing_games << state
             next
         end
-    state[:player_turn] = !state[:player_turn]
-    if state[:player_turn] == false
-        state[:player_hp] -= (10 - state[:player_armour])
+    
+    cast(state)
+    state[:next_spell] = nil
+
+    evaluate(state)
+    if state[:outcome] == "win"
+        won_games << state[:mana_spent]
+        next
+    elsif state[:outcome] == "lose"
+        losing_games << state
+        next
+    end
+
+    #boss turn
+    apply_le(state)
+    evaluate(state)
+    if state[:outcome] == "win"
+    won_games << state[:mana_spent]
+        next
+    elsif state[:outcome] == "lose"
+        losing_games << state
+        next
+    end
+
+    state[:player_hp] = state[:player_hp] - [1, (10 - state[:player_armour])].max
+
+    evaluate(state)
+    if state[:outcome] == "win"
+    won_games << state[:mana_spent]
+        next
+    elsif state[:outcome] == "lose"
+        losing_games << state
+        next
     else
-        generate_moves(state, stack)
+        stack.concat(generate_moves(state))
     end
 end
 
-pp won_games
+pp won_games.min
+pp losing_games.count
