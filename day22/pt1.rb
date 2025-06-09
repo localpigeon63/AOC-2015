@@ -59,53 +59,56 @@ def evaluate(state)
     end
 end
 
-losing_games = []
+def deep_copy(obj)
+  Marshal.load(Marshal.dump(obj))
+end
 
 def generate_moves (state)
     new_states = []
     if state[:mana_remaining] >= 53
-        new_state = state.dup
+        new_state = deep_copy(state)
         new_state[:next_spell] = "magic_missile"
         new_states << new_state
     end
     if state[:mana_remaining] >= 73
-        new_state = state.dup
+        new_state = deep_copy(state)
         new_state[:next_spell] = "drain"
         new_states << new_state
     end
     if state[:mana_remaining] >=113 &&
         state[:le_shield] == 0
-        new_state = state.dup
+        new_state = deep_copy(state)
         new_state[:next_spell] = "shield"
         new_states << new_state
     end
     if state[:mana_remaining] >= 173 &&
         state[:le_poison] == 0
-        new_state = state.dup
+        new_state = deep_copy(state)
         new_state[:next_spell] = "poison"
         new_states << new_state
     end
     if state[:mana_remaining] >= 229 &&
         state[:le_recharge] == 0
-        new_state = state.dup
+        new_state = deep_copy(state)
         new_state[:next_spell] = "recharge"
         new_states << new_state
     end
     new_states
 end
 
-won_games = []
+winning_games = []
+losing_games = []
 
 stack = generate_moves(initial_state)
 
 while stack.any? do
-    state = stack.pop
+    state = deep_copy(stack.pop)
 
     # player turn
     apply_le(state)
     evaluate(state)
         if state[:outcome] == "win"
-            won_games << state[:mana_spent]
+            winning_games << state[:mana_spent]
             next
         elsif state[:outcome] == "lose"
             losing_games << state
@@ -117,7 +120,7 @@ while stack.any? do
 
     evaluate(state)
     if state[:outcome] == "win"
-        won_games << state[:mana_spent]
+        winning_games << state[:mana_spent]
         next
     elsif state[:outcome] == "lose"
         losing_games << state
@@ -128,7 +131,7 @@ while stack.any? do
     apply_le(state)
     evaluate(state)
     if state[:outcome] == "win"
-    won_games << state[:mana_spent]
+    winning_games << state[:mana_spent]
         next
     elsif state[:outcome] == "lose"
         losing_games << state
@@ -139,7 +142,7 @@ while stack.any? do
 
     evaluate(state)
     if state[:outcome] == "win"
-    won_games << state[:mana_spent]
+    winning_games << state[:mana_spent]
         next
     elsif state[:outcome] == "lose"
         losing_games << state
@@ -149,7 +152,7 @@ while stack.any? do
     end
 end
 
-total_winning_games = won_games.count
+total_winning_games = winning_games.count
 total_losing_games = losing_games.count
 
 puts "winning_games = #{total_winning_games}"
