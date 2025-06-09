@@ -59,42 +59,38 @@ def evaluate(state)
     end
 end
 
-def deep_copy(obj)
-  Marshal.load(Marshal.dump(obj))
-end
-
 def generate_moves (state)
     new_states = []
     if state[:mana_remaining] >= 53 || 
         (state[:le_recharge] >= 1 && state[:mana_remaining] + 101 >= 53)
-        new_state = deep_copy(state)
+        new_state = state.dup
         new_state[:next_spell] = "magic_missile"
         new_states << new_state
     end
     if state[:mana_remaining] >= 73 ||
         (state[:le_recharge] >= 1 && state[:mana_remaining] + 101 >= 73)
-        new_state = deep_copy(state)
+        new_state = state.dup
         new_state[:next_spell] = "drain"
         new_states << new_state
     end
     if (state[:mana_remaining] >=113 ||
         (state[:le_recharge] >= 1 && state[:mana_remaining] + 101 >= 53)) &&
         state[:le_shield] <= 1
-        new_state = deep_copy(state)
+        new_state = state.dup
         new_state[:next_spell] = "shield"
         new_states << new_state
     end
     if (state[:mana_remaining] >= 173 ||
         (state[:le_recharge] >= 1 && state[:mana_remaining] + 101 >= 53)) &&
         state[:le_poison] <= 1
-        new_state = deep_copy(state)
+        new_state = state.dup
         new_state[:next_spell] = "poison"
         new_states << new_state
     end
     if (state[:mana_remaining] >= 229 ||
         (state[:le_recharge] >= 1 && state[:mana_remaining] + 101 >= 53)) &&
         state[:le_recharge] <= 1
-        new_state = deep_copy(state)
+        new_state = state.dup
         new_state[:next_spell] = "recharge"
         new_states << new_state
     end
@@ -107,7 +103,7 @@ losing_games = []
 stack = generate_moves(initial_state)
 
 while stack.any? do
-    state = deep_copy(stack.pop)
+    state = stack.pop.dup
 
     # player turn
     apply_le(state)
