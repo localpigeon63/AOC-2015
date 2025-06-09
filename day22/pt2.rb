@@ -110,6 +110,16 @@ while stack.any? do
     state = deep_copy(stack.pop)
 
     # player turn
+    state[:player_hp] -= 1
+    evaluate(state)
+        if state[:outcome] == "win"
+            winning_games << state[:mana_spent]
+            next
+        elsif state[:outcome] == "lose"
+            losing_games << state
+            next
+        end
+
     apply_le(state)
     evaluate(state)
         if state[:outcome] == "win"
