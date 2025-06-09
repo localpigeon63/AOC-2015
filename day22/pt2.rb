@@ -127,7 +127,6 @@ while stack.any? do
         end
     
     cast(state)
-    state[:next_spell] = nil
 
     evaluate(state)
     if state[:outcome] == "win"
