@@ -13,7 +13,7 @@ until row ==target_row &&
             row = max_row
         end
         column = column + 1
-        if column > max_row - 1
+        if column > max_row -1
             column = 1
         end
         value = (value * 252533) % 33554393
@@ -44,4 +44,4 @@ puts value
 #0,3
 
 #So need to set x to max_number and count down from there.
-#Meanwhile y counts up to max_numbe
+#Meanwhile y counts up t
