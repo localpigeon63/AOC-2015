@@ -24,4 +24,4 @@ end
 
 puts value
 
-# For the future, look into modular exponentiation using .pow
+# For the future, look into modular exponentiation using .pow as an alternative to .times do
